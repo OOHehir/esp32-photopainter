@@ -1,0 +1,43 @@
+menu "app_cycle -- wake and sleep"
+
+config APP_CYCLE_INTERVAL_MIN
+    int "Minutes between wakes"
+    default 30
+    range 5 720
+    help
+        Wakes land on the wall-clock grid (:00 and :30 by default). Each wake costs a
+        Wi-Fi association and a TLS fetch per calendar, a few seconds at ~100 mA; the
+        panel refreshes only when the picture changed.
+
+config APP_CYCLE_QUIET_START_H
+    int "Quiet hours start (local hour)"
+    default 23
+    range 0 23
+
+config APP_CYCLE_QUIET_END_H
+    int "Quiet hours end (local hour)"
+    default 6
+    range 0 23
+    help
+        No wakes between the start and end hour, local time; the first wake after is on
+        the end hour. Set start and end equal to wake around the clock.
+
+config APP_CYCLE_AWAKE_WINDOW_S
+    int "Seconds to stay awake for setup or after a long KEY press"
+    default 900
+    range 60 3600
+
+config APP_CYCLE_OTA_EVERY_H
+    int "Hours between update checks"
+    default 24
+    range 1 168
+
+config APP_CYCLE_SLEEP_ON_USB
+    bool "Deep sleep even when USB power is present"
+    default y
+    help
+        Off, a board on USB power stays awake: it redraws on the same grid, keeps its
+        web page up and stays reachable for flashing. On, it behaves the same on USB as
+        on battery, which is what to test before trusting a battery.
+
+endmenu

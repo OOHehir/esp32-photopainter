@@ -1,0 +1,32 @@
+menu "app_cal -- calendars"
+
+config APP_CAL_SEED
+    string "Calendars to configure on first boot"
+    default ""
+    help
+        Whitespace-separated `name,color,url` entries, for example
+        `Family,blue,https://calendar.google.com/calendar/ical/.../basic.ics`.
+        Colors: blue, red, green, yellow, black. Read only while NVS holds no calendar
+        list; the web page edits the list after that. The URL is a credential: set this
+        in sdkconfig.local, never in a tracked file.
+
+config APP_CAL_TZ
+    string "Local time zone (POSIX TZ string)"
+    default "GMT0IST,M3.5.0/1,M10.5.0"
+    help
+        The zone the week is drawn in. Ireland by default. Examples:
+        `GMT0BST,M3.5.0/1,M10.5.0` (UK), `CET-1CEST,M3.5.0,M10.5.0/3` (central Europe),
+        `EST5EDT,M3.2.0,M11.1.0` (US Eastern).
+
+config APP_CAL_HIDE_PRIVATE
+    bool "Leave out events marked private"
+    default y
+    help
+        Drops events with CLASS:PRIVATE or CLASS:CONFIDENTIAL -- Google's "Private"
+        visibility -- so a panel in a shared room does not show them.
+
+config APP_CAL_HTTP_TIMEOUT_MS
+    int "Per-calendar HTTPS timeout (ms)"
+    default 20000
+
+endmenu

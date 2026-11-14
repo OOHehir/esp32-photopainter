@@ -1,0 +1,30 @@
+# Site-specific build settings & secrets, layered over the tracked defaults.
+#
+# Copy to `sdkconfig.local`, which is gitignored, & edit there:
+#
+#     cp sdkconfig.local.example sdkconfig.local
+#
+# Nothing in *this* file may be a real credential -- it is committed. ESP-IDF also loads
+# `sdkconfig.local.<target>`, so per-chip overrides layer the same way. The full
+# precedence order is in the note in CMakeLists.txt.
+
+# --- Where this device fetches its firmware --------------------------------------------
+# The host must appear in the server certificate's SAN list, & must match the
+# OTA_BASE_URL that tools/publish.sh writes into the manifest.
+CONFIG_APP_OTA_BASE_URL="https://nas.lan:8443/fw"
+
+# --- Calendars, optional ---------------------------------------------------------------
+# Seeded into NVS on first boot only; the web page edits the list after that. Each entry
+# is name,colour,url; the URL is Google's "Secret address in iCal format" & is a secret.
+#CONFIG_APP_CAL_SEED="Family,blue,https://calendar.google.com/calendar/ical/.../basic.ics"
+CONFIG_APP_CAL_TZ="GMT0IST,M3.5.0/1,M10.5.0"
+
+# --- Development ------------------------------------------------------------------------
+# Stay awake while on USB power, so the board can be reflashed without holding BOOT.
+#CONFIG_APP_CYCLE_SLEEP_ON_USB=n
+
+# --- The provisioning AP's passphrase salt ---------------------------------------------
+# Mixed with the MAC to derive the setup passphrase. The tracked default is published
+# with this repository, & the SSID advertises the MAC -- so a device left on the default
+# has a passphrase anyone can compute. Set your own before commissioning a board.
+CONFIG_APP_CFG_AP_PASS_SALT=""

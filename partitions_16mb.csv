@@ -1,0 +1,13 @@
+# Partition table for the PhotoPainter's 16 MB flash. Two OTA slots, no
+# factory app. 6 MB per slot leaves the image (~1.5 MB) room to grow without ever needing
+# a cable to change this table -- OTA cannot rewrite it. NVS is 64 KB because it also
+# holds the cached week of events (up to ~11 KB) shown when a fetch fails.
+#
+# Name,     Type, SubType,  Offset,   Size,     Flags
+nvs,        data, nvs,      0x9000,   0x10000,
+otadata,    data, ota,      0x19000,  0x2000,
+phy_init,   data, phy,      0x1B000,  0x1000,
+ota_0,      app,  ota_0,    0x20000,  0x600000,
+ota_1,      app,  ota_1,    0x620000, 0x600000,
+storage,    data, spiffs,   0xC20000, 0x3D0000,
+coredump,   data, coredump, 0xFF0000, 0x10000,

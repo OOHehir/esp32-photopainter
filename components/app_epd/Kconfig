@@ -1,0 +1,57 @@
+menu "app_epd -- the ePaper panel"
+
+config APP_EPD_ENABLE
+    bool "Drive the PhotoPainter's 7.3\" Spectra 6 panel"
+    default y
+    help
+        800x480, six inks. Switch it off to build the firmware without a panel.
+
+comment "Pins -- defaults are the Waveshare ESP32-S3-PhotoPainter"
+
+config APP_EPD_SCLK_GPIO
+    int "SCLK"
+    default 10
+
+config APP_EPD_MOSI_GPIO
+    int "MOSI"
+    default 11
+
+config APP_EPD_CS_GPIO
+    int "Chip select"
+    default 9
+
+config APP_EPD_DC_GPIO
+    int "Data/command"
+    default 8
+
+config APP_EPD_RST_GPIO
+    int "Reset"
+    default 12
+
+config APP_EPD_BUSY_GPIO
+    int "Busy"
+    default 13
+    help
+        Driven by the panel, HIGH when idle.
+
+if APP_EPD_ENABLE
+
+config APP_EPD_ROTATE_180
+    bool "Rotate the picture 180 degrees"
+    default y
+    help
+        The PhotoPainter's stand holds the panel upside down relative to the
+        controller's scan order: without this, an unrotated colour bar shows black on
+        the right. Turn it off for a board mounted the other way round.
+
+config APP_EPD_SPI_HZ
+    int "SPI clock (Hz)"
+    default 20000000
+    help
+        Waveshare's driver runs this panel at 40 MHz on the same board. 20 MHz moves the
+        192 000-byte frame in under 100 ms against a ~25 s refresh, so the margin costs
+        nothing.
+
+endif
+
+endmenu

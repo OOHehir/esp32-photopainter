@@ -1,0 +1,27 @@
+# Waveshare ESP32-S3-PhotoPainter: ESP32-S3-WROOM-1-N16R8.
+# `esptool flash-id` on the bench board reports 16 MB quad flash and 8 MB embedded
+# octal PSRAM. Change the two flash lines together; cmake/check_partitions.cmake
+# enforces that they agree.
+CONFIG_ESPTOOLPY_FLASHSIZE_16MB=y
+CONFIG_ESPTOOLPY_FLASHMODE_QIO=y
+CONFIG_PARTITION_TABLE_CUSTOM_FILENAME="partitions_16mb.csv"
+
+# PSRAM holds the 384 000-byte surface and the parsed calendar. malloc()
+# may return PSRAM above 512 bytes, so the iCalendar parser's buffers land there without
+# naming a heap; 64 KB of internal RAM stays reserved for Wi-Fi and DMA.
+CONFIG_SPIRAM=y
+CONFIG_SPIRAM_MODE_OCT=y
+CONFIG_SPIRAM_SPEED_80M=y
+CONFIG_SPIRAM_USE_MALLOC=y
+CONFIG_SPIRAM_MALLOC_ALWAYSINTERNAL=512
+CONFIG_SPIRAM_MALLOC_RESERVE_INTERNAL=65536
+CONFIG_MBEDTLS_EXTERNAL_MEM_ALLOC=y
+
+# The board's only USB socket is the chip's native USB-Serial-JTAG; there is
+# no UART bridge.
+CONFIG_ESP_CONSOLE_USB_SERIAL_JTAG=y
+
+# Green LED on GPIO42, wired active low (Waveshare led_bsp.h: LED_ON 0).
+CONFIG_APP_LED_TYPE_GPIO=y
+CONFIG_APP_LED_GPIO=42
+CONFIG_APP_LED_ACTIVE_LOW=y
