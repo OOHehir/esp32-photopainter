@@ -3,17 +3,17 @@
 #
 #   ./tools/publish.sh [build-dir]
 #
-# Everything -- project name, version, and target chip -- is read from the build
-# output, so this script is chip-agnostic: build for any target and publish the
-# same way. Nothing here needs to know which chip you chose.
+# Project name, version and target chip are read from the build output. The chip goes
+# into the manifest, which a device checks, but not into the path: this project ships
+# for one chip.
 #
 # Layout produced on the server:
-#   firmware/<project>/<chip>/manifest.json
-#   firmware/<project>/<chip>/<version>/<project>.bin
+#   <dir>/<project>/manifest.json
+#   <dir>/<project>/<version>/<project>.bin
 #
 # Destination is either a local path or a remote rsync target:
-#   NAS_FIRMWARE_DIR=/volume1/docker/esp-ota/firmware   (local mount)
-#   NAS_HOST=admin@nas.lan                              (rsync over ssh)
+#   NAS_FIRMWARE_DIR=/media/dsCIFS/public/ota   (the NAS's public share, mounted here)
+#   NAS_HOST=user@nas                           (rsync over ssh)
 
 set -euo pipefail
 
@@ -66,7 +66,7 @@ esac
 # Stage the release locally, then ship the whole tree in one go.
 staging="$(mktemp -d)"
 trap 'rm -rf "$staging"' EXIT
-rel="$project/$chip"
+rel="$project"
 mkdir -p "$staging/$rel/$version"
 cp "$bin_path" "$staging/$rel/$version/$project.bin"
 

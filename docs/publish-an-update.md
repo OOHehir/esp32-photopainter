@@ -51,7 +51,7 @@ Where:
     signed: yes
 ==> copy -> /media/dsCIFS/public/ota
 ==> published
-    manifest: https://192.168.178.100:8443/fw/esp32-photopainter/esp32s3/manifest.json
+    manifest: https://192.168.178.100:8443/fw/esp32-photopainter/manifest.json
     verified: the server returns this release (HTTP 200, v0.7.0)
 ```
 
@@ -124,7 +124,7 @@ anyway, you asked`.
 dials, or the server cannot read it. Check both from the publishing host:
 
 ```bash
-curl --cacert server_certs/ca_cert.pem https://192.168.178.100:8443/fw/esp32-photopainter/esp32s3/manifest.json
+curl --cacert server_certs/ca_cert.pem https://192.168.178.100:8443/fw/esp32-photopainter/manifest.json
 ```
 
 A 403 rather than a 404 is a permissions problem, & the directory itself is the usual

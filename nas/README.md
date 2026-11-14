@@ -2,7 +2,7 @@
 
 An nginx container serving firmware images over TLS on port 8443. It is the same stack
 esp-ota and esp32-wx-station publish to: each project lands in its own
-`firmware/<project>/<chip>/` directory, so one running server feeds them all and nothing
+`<project>/` directory, so one running server feeds them all and nothing
 here needs redoing for the PhotoPainter. The DS225+ is a
 Celeron J4125 (x86-64) with 2 GB RAM; `nginx:stable-alpine` uses roughly 10 MB, so
 this is not a meaningful load on the NAS.
@@ -155,12 +155,13 @@ configuration.
 Layout on the server:
 
 ```
-firmware/<project>/<chip>/manifest.json
-firmware/<project>/<chip>/<version>/<project>.bin
+public/ota/<project>/manifest.json
+public/ota/<project>/<version>/<project>.bin
 ```
 
-Per-chip manifests mean one server can feed a mixed fleet, & a device only ever
-fetches the small manifest for its own project & target.
+The manifest names the chip, & a device refuses one written for another. esp-ota's own
+template adds a `<chip>/` level so one project can ship for several chips; the
+PhotoPainter is ESP32-S3 only, so its path stops at the project.
 
 ## Notes & gotchas
 
