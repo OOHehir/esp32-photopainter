@@ -46,6 +46,15 @@ sha256="$(sha256sum "$bin_path" | cut -d' ' -f1)"
 size="$(stat -c%s "$bin_path")"
 base_url="${OTA_BASE_URL:-https://nas.lan:8443/fw}"
 
+# The path has no chip level, so a build for any other chip would replace this
+# project's only manifest & leave every deployed board without updates.
+expected_chip="esp32s3"
+if [[ "$chip" != "$expected_chip" ]]; then
+    echo "error: this build targets $chip; $project ships for $expected_chip only." >&2
+    echo "       Run: idf.py set-target $expected_chip && idf.py build" >&2
+    exit 1
+fi
+
 echo "==> $project $version ($chip), $((size / 1024)) KiB"
 
 # Say out loud whether this image is signed. A device built with signing enabled refuses
