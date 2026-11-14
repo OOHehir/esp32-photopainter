@@ -40,7 +40,7 @@ Create `/volume1/docker/esp-ota` (File Station, or over ssh) & copy:
 ├── certs/
 │   ├── server.crt
 │   └── server.key          # 0400 ideally; do NOT copy ca.key here
-└── firmware/               # publish.sh writes into this
+└── firmware/               # unused: nginx serves /volume1/public/ota (see Publishing)
 ```
 
 ```sh
@@ -120,8 +120,18 @@ openssl s_client -connect nas.lan:8443 -CAfile nas/certs/ca.crt -tls1_2 </dev/nu
 ## Publishing firmware
 
 ```sh
-NAS_HOST=admin@nas.lan ./tools/publish.sh
+NAS_FIRMWARE_DIR=/media/dsCIFS/public/ota ./tools/publish.sh
 ```
+
+nginx serves the NAS's `public` share (`/volume1/public/ota`), so publishing is a copy
+onto that share as mounted here over CIFS: no ssh account & no DSM rsync service. The
+mount point is this machine's; yours may differ. `NAS_HOST=user@nas` still publishes over
+rsync & ssh to the same folder.
+
+The share is writable by anyone on the LAN. Every image is signed & devices refuse an
+older version on their own checks, so a stranger cannot install firmware; they can
+publish a broken manifest & stall updates. Images are also readable there, including the
+provisioning salt compiled in from `sdkconfig.local`.
 
 
 `publish.sh` sets the modes it ships (`a+rX,go-w`) rather than letting the staging

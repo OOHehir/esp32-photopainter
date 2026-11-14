@@ -15,7 +15,10 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./certs/server.crt:/etc/nginx/certs/server.crt:ro
       - ./certs/server.key:/etc/nginx/certs/server.key:ro
-      - ./firmware:/srv/firmware:ro
+      # The NAS's public share, so publishing is a file copy onto the CIFS mount with no
+      # ssh or rsync account. Anyone on the LAN can write there; images are signed and
+      # devices refuse older versions, so the worst a stranger can do is stall updates.
+      - /volume1/public/ota:/srv/firmware:ro
     tmpfs:
       # The stock nginx image writes its cache and pid here; tmpfs keeps the
       # rest of the filesystem read-only.
